@@ -14,7 +14,7 @@ const LoginPage = () => {
 
         try {
             // Send login request to your backend
-            const response = await fetch('http://localhost:8090/api/login', {
+            const response = await fetch('http://34.95.247.72:8090/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
