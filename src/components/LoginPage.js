@@ -10,12 +10,12 @@ const LoginPage = () => {
     const navigate = useNavigate();
 
     const handleLoginClick = async (e) => {
-        e.preventDefault(); // Prevent default form submission
+        e.preventDefault();
 
         try {
-            // Send login request to your backend
-            const response = await fetch('http://34.95.247.72:8090/api/login', {
+            const response = await fetch('http://localhost:8090/api/login', {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -42,13 +42,13 @@ const LoginPage = () => {
     };
 
     const handleSignUpClick = () => {
-        navigate('/signup');
+        navigate('/signup/email');
     };
 
     return (
         <div className="login-container">
             <img src={logoImage} alt="Logo" className="logo" />
-            <h2>Bem vindo</h2>
+            <h2>Unifriends</h2>
             <form onSubmit={handleLoginClick}>
                 <div className="input-container">
                     <input 

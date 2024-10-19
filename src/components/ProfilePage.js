@@ -18,7 +18,7 @@ const ProfilePage = () => {
         // Replace with your API endpoint
         const fetchProfilePic = async () => {
             try {
-                const response = await fetch('http://34.95.247.72:8090/api/majors', {
+                const response = await fetch('http://localhost:8090/api/majors', {
                     method: 'GET',
                     credentials: 'include',
                     headers: {
