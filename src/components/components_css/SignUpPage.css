@@ -39,10 +39,6 @@ input, select {
     padding-left: 20px;
 }
 
-input::placeholder, select {
-    color: #5A9155;
-}
-
 .toggle-password {
     position: absolute;
     right: 10px;
@@ -78,3 +74,10 @@ input::placeholder, select {
 .login-text a:hover {
     text-decoration: underline;
 }
+
+.error-text {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }

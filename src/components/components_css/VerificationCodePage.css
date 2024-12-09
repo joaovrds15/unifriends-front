@@ -15,7 +15,7 @@ body {
 h2 {
     font-size: 24px;
     color: #333;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
 }
 
 .input-container {
@@ -38,7 +38,7 @@ input::placeholder {
     color: #5A9155;
 }
 
-.continue-button {
+.continue-button, .resend-button {
     width: 280px;
     padding: 10px;
     background-color: #5A9155;
@@ -52,4 +52,34 @@ input::placeholder {
 
 .continue-button:hover {
     background-color: #4e7d48;
+}
+
+.continue-button:disabled, .resend-button:disabled {
+    background-color: #c1d1b7; /* lighter color */
+    color: #999;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+/* Hide the arrows in Chrome, Safari, Edge, and Opera */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Hide the arrows in Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.timer{
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+    margin-top: 0px;
 }

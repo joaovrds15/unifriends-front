@@ -58,3 +58,9 @@ input::placeholder {
 .signup-button:hover {
     background-color: #4e7d48;
 }
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+}

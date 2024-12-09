@@ -14,27 +14,6 @@ import exampleImage8 from '../temp/profile.png';
 const ProfilePage = () => {
     const [profilPic, setProfilePic] = useState('');
 
-    useEffect(() => {
-        // Replace with your API endpoint
-        const fetchProfilePic = async () => {
-            try {
-                const response = await fetch('http://localhost:8090/api/majors', {
-                    method: 'GET',
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-                const data = await response.json();
-                setProfilePic(data.profilePicUrl); // Adjust based on your API response structure
-            } catch (error) {
-                console.error('Error fetching profile picture:', error);
-            }
-        };
-
-        fetchProfilePic();
-    }, []);
-
     return (
         <div className="profile-container">
             <div className="background-image">

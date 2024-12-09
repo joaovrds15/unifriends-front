@@ -1,22 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../components/components_css/EmailPage.css';
-import logoImage from '../icons/image.png'
-
+import logoImage from '../icons/image.png';
+import { RegistrationContext } from '../context/RegistrationContext';
 
 const EmailPage = () => {
-  const [email, setEmail] = useState('');
+  const CREATED = 201;
+  const CONFLICT = 409;
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
+  const { registrationData, setRegistrationData } = useContext(RegistrationContext);
 
-    const handleEmailSubmit = (e) => {
-        e.preventDefault();
-        if (email.endsWith('@estudantes.ifg.edu.br')) {
-            setEmail({ email });
-            navigate('/signup/verification');
-        } else {
-            alert('Insira um e-mail IFG válido');
+  const sendVerificationEmail = async (email) => {
+    try {
+      const response = await fetch('http://localhost:8090/api/verify/email/' + email, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.status === CREATED || response.status === CONFLICT) {
+        const data = await response.json();
+        return data;
+      }
+  
+      setErrorMessage('Algo deu errado. Tente novamente mais tarde.');
+    } catch (error) {
+      setErrorMessage('Algo deu errado. Tente novamente mais tarde.');
+    }
+  };
+  
+  const handleEmailSubmit = async (e) => {
+    e.preventDefault();
+    if (registrationData.email.endsWith('@estudantes.ifg.edu.br')) {
+      try {
+        const data = await sendVerificationEmail(registrationData.email);
+        if (data) {
+          navigate('/signup/verification');
         }
-    };
+      } catch (error) {
+        setErrorMessage('Algo deu errado. Tente novamente mais tarde.');
+      }
+    } else {
+      setErrorMessage('Insira um e-mail IFG válido');
+    }
+  };
 
   return (
     <div className="email-page-container">
@@ -27,13 +57,14 @@ const EmailPage = () => {
         <input
           type="email"
           placeholder="E-mail"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={registrationData.email}
+          onChange={(e) => setRegistrationData({ ...registrationData, email: e.target.value })}
         />
       </div>
-
-    <button className="signup-button" type="submit" onClick={handleEmailSubmit}>Continuar</button>
-
+      {errorMessage && (
+        <p className='error-message'>{errorMessage}</p>
+      )}
+      <button className="signup-button" type="submit" onClick={handleEmailSubmit}>Continuar</button>
     </div>
   );
 };
