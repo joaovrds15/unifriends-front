@@ -89,12 +89,13 @@ const UploadImagesPage = () => {
                 return null;
             })
         );
+
         setRegistrationData({
             ...registrationData,
             profilePictureUrl,
             usersImages: usersImages.filter((url) => url !== null),
         });
-        //images worng backend
+
         const formattedData = {
             name: registrationData.firstName,
             email: registrationData.email,
@@ -117,7 +118,7 @@ const UploadImagesPage = () => {
             });
     
             if (response.ok) {
-                navigate('/profile');
+                navigate('/affinity');
             } else {
                 console.error('Failed to save registration data');
             }
@@ -169,7 +170,7 @@ const UploadImagesPage = () => {
                         />
                         <div className="grid-image-placeholder" onClick={() => document.getElementById(`gridFileInput${index}`).click()}>
                             {gridImage ? (
-                                <div>
+                                <div> 
                                     <img src={gridImage.imageUrl} alt={`Grid ${index}`} className="grid-image" />
                                     <img 
                                         src={xIcon} 

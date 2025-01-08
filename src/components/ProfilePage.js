@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import '../components/components_css/ProfilePage.css';
-import profilePic from '../temp/profile.png'; // Add your profile picture here
-import libraryBackground from '../temp/Image.png'; // Add your background image here
-import exampleImage1 from '../temp/profile.png'; // Add sample images here
+import profilePic from '../temp/profile.png';
+import libraryBackground from '../temp/Image.png';
+import exampleImage1 from '../temp/profile.png';
 import exampleImage2 from '../temp/profile.png';
 import exampleImage3 from '../temp/profile.png';
 import exampleImage4 from '../temp/profile.png';
@@ -23,7 +23,6 @@ const ProfilePage = () => {
             <div className="profile-section">
                 <img src={profilePic} alt="Profile" className="profile-pic" />
                 <h2>University Student</h2>
-                <p className="connect-me-btn">Menina louca do cabelo de quatro estações</p>
 
                 <div className="stats-container">
                     <div className="stat">
