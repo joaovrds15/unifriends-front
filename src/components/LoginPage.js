@@ -25,18 +25,16 @@ const LoginPage = () => {
                 }),
             });
 
-            const data = await response.json();
-
-            if (response.ok) {
-
-                console.log('Login successful:', data);
-                navigate('/profile'); // Redirect to another page after successful login
+            console.log(response);
+            if (response.status === 204) {
+                
+                console.log('Login successful');
+                navigate('/affinity');
             } else {
-                // Handle errors (e.g., wrong credentials)
+                const data = await response.json();
                 setError(data.message || 'Login failed');
             }
         } catch (error) {
-            // Handle network errors
             setError('Network error: ' + error.message);
         }
     };

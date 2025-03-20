@@ -6,7 +6,7 @@ import { RegistrationContext } from '../context/RegistrationContext';
 
 const EmailPage = () => {
   const CREATED = 201;
-  const CONFLICT = 409;
+  const OK = 200;
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
   const { registrationData, setRegistrationData } = useContext(RegistrationContext);
@@ -20,13 +20,12 @@ const EmailPage = () => {
           'Content-Type': 'application/json',
         },
       });
-  
-      if (response.status === CREATED || response.status === CONFLICT) {
-        const data = await response.json();
+
+      const data = await response.json();
+      if (response.status === CREATED || response.status === OK) {
         return data;
       }
-  
-      setErrorMessage('Algo deu errado. Tente novamente mais tarde.');
+      setErrorMessage(data.error || 'Algo deu errado. Tente novamente mais tarde.');
     } catch (error) {
       setErrorMessage('Algo deu errado. Tente novamente mais tarde.');
     }

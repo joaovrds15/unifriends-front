@@ -8,10 +8,10 @@ import search from '../icons/search.svg';
 const Footer = () => {
   return (
     <footer className="footer">
-      <img src={affinity} alt='logo-handshake' className="footer-button" style={{ width: '25px', height: '25px' }} />
-      <img src={search} alt='logo-magnifying-glass' className="footer-button" style={{ width: '25px', height: '25px' }} />
-      <img src={pencil} alt='pencil-answer' className="footer-button" style={{ width: '25px', height: '25px' }} />
-      <img src={profile} alt='profile-icon' className="footer-button" style={{ width: '25px', height: '25px' }} />
+      <img src={affinity} alt='logo-handshake' className="footer-button"/>
+      <img src={search} alt='logo-magnifying-glass' className="footer-button"/>
+      <img src={pencil} alt='pencil-answer' className="footer-button"/>
+      <img src={profile} alt='profile-icon' className="footer-button"/>
     </footer>
   );
 };
