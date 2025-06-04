@@ -15,7 +15,7 @@ const VerificationCodePage = () => {
 
   const getExpirationTime = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:8090/api/verify/code/${email}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/verify/code/${email}`, {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -50,7 +50,7 @@ const VerificationCodePage = () => {
   const handleVerificationSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8090/api/verify/email', {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/verify/email`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -74,7 +74,7 @@ const VerificationCodePage = () => {
 
   const handleResendCode = async () => {
     try {
-      const response = await fetch(`http://localhost:8090/api/verify/email/${email}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/verify/email/${email}`, {
         method: 'GET',
         credentials: 'include',
         headers: {
