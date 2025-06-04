@@ -13,7 +13,7 @@ const LoginPage = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:8090/api/login', {
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/login`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

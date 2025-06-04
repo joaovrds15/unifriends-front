@@ -13,7 +13,7 @@ const EmailPage = () => {
 
   const sendVerificationEmail = async (email) => {
     try {
-      const response = await fetch('http://localhost:8090/api/verify/email/' + email, {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/verify/email/` + email, {
         method: 'GET',
         credentials: 'include',
         headers: {
