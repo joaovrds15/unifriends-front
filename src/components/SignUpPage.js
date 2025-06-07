@@ -8,9 +8,10 @@ import showIcon from '../icons/show.svg';
 import hideIcon from '../icons/hide.svg';
 
 const SignUpPage = ({setEmailVerified}) => {
+  const CREATED = 201;
   const [majors, setMajors] = useState([]);
   const { registrationData, setRegistrationData } = useContext(RegistrationContext);
-  const [passwordError, setPasswordError] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [rePasswordVisible, setRePasswordVisible] = useState(false);
 
@@ -65,9 +66,9 @@ const SignUpPage = ({setEmailVerified}) => {
     const updatedData = { ...registrationData, rePassword: value };
     setRegistrationData(updatedData);
     if (registrationData.password !== value) {
-      setPasswordError('Senhas diferentes');
+      setErrorMessage('Senhas diferentes');
     } else {
-      setPasswordError('');
+      setErrorMessage('');
     }
   };
 
@@ -79,12 +80,47 @@ const SignUpPage = ({setEmailVerified}) => {
     setRePasswordVisible(!rePasswordVisible)
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (passwordError) {
+    if (errorMessage) {
       return;
     }
-    navigate('/upload-images');
+
+    try {
+      const response = await handleRegistrationSubmit();
+      if (response.status === CREATED) {
+        navigate('/upload-images');
+        localStorage.removeItem('registrationData');
+      }
+    } catch (error) {
+      setErrorMessage('Algo deu errado. Tente novamente mais tarde.');
+    }
+  };
+
+  const handleRegistrationSubmit = async () => {
+    const formattedData = {
+      name: registrationData.firstName,
+      email: registrationData.email,
+      password: registrationData.password,
+      re_password: registrationData.rePassword,
+      phone_number: registrationData.phoneNumber.replace(/\D/g, ''),
+      major_id: parseInt(registrationData.majorId),
+    };
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/register`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formattedData),
+      });
+
+      return response;
+    } catch (error) {
+      setErrorMessage('Algo deu errado. Tente novamente mais tarde.');
+    }
   };
 
   return (
@@ -167,7 +203,7 @@ const SignUpPage = ({setEmailVerified}) => {
       </div>
 
       <div className='error-container'>
-          {passwordError && <p className="error-text">{passwordError}</p>}
+          {errorMessage && <p className="error-text">{errorMessage}</p>}
       </div>
 
       <button className="signup-button" type="submit">Continuar</button>
