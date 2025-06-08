@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../components/components_css/LoginPage.css';
 import logoImage from '../icons/image.png';
+import showIcon from '../icons/show.svg';
+import hideIcon from '../icons/hide.svg';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [passwordVisible, setPasswordVisible] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -39,6 +42,10 @@ const LoginPage = () => {
         }
     };
 
+    const togglePasswordVisibility = () => {
+        setPasswordVisible(!passwordVisible);
+    };
+
     const handleSignUpClick = () => {
         navigate('/signup/email');
     };
@@ -59,14 +66,14 @@ const LoginPage = () => {
                 </div>
                 <div className="input-container">
                     <input 
-                        type="password" 
+                        type={passwordVisible ? "text" : "password"}
                         placeholder="Senha" 
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
-                    <button className="toggle-password" type="button">
-                        <span role="img" aria-label="eye">👁️</span>
+                    <button className="toggle-password" type="button" onClick={togglePasswordVisibility}>
+                        <img src={passwordVisible ? hideIcon : showIcon} style={{ width: '25px', height: '25px' }} alt={passwordVisible ? 'Hide' : 'Show'} />
                     </button>
                 </div>
                 {error && <p className="error-text">Usuário ou Senha Incorreta</p>} {/* Display error if login fails */}
