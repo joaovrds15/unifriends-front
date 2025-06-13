@@ -4,6 +4,7 @@ import '../components/components_css/LoginPage.css';
 import logoImage from '../icons/image.png';
 import showIcon from '../icons/show.svg';
 import hideIcon from '../icons/hide.svg';
+import { useUser } from '../context/UserContext';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -11,6 +12,7 @@ const LoginPage = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const { loginUser } = useUser();
 
     const handleLoginClick = async (e) => {
         e.preventDefault();
@@ -28,9 +30,9 @@ const LoginPage = () => {
                 }),
             });
 
-            console.log(response);
-            if (response.status === 204) {
-                
+            if (response.status === 200) {
+                const userData = await response.json();
+                loginUser(userData.data);
                 console.log('Login successful');
                 navigate('/affinity');
             } else {

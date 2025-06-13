@@ -1,15 +1,19 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Footer from './Footer';
 import '../components/components_css/AffinityScreen.css';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../context/UserContext';
 
 function AffinityScreen() {
   const [profiles, setProfiles] = useState([]);
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef();
+  const { user, logoutUser } = useUser();
 
   const fetchProfiles = useCallback(async (page = 1, append = false) => {
     if (page === 1) {
@@ -20,7 +24,7 @@ function AffinityScreen() {
     setError(null);
     
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/get-results/user/53?page=${page}&limit=10`, {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/get-results/user/${user.id}?page=${page}&limit=10`, {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -56,6 +60,32 @@ function AffinityScreen() {
       setIsLoadingMore(false);
     }
   }, []);
+
+
+  const handleLogoutClick = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/logout`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            console.log(response);
+            if (response.status === 204) {
+                logoutUser();
+                localStorage.removeItem('user');
+                navigate('/');
+            } else {
+                
+            }
+        } catch (error) {
+            setError('Network error: ' + error.message);
+        }
+    };
 
   const lastProfileElementRef = useCallback(node => {
     if (isLoadingMore) return;
@@ -114,7 +144,7 @@ function AffinityScreen() {
     <div className="container">
       <header className="header">
         <h1>Affinity</h1>
-        <button className="logout-button">Log Out</button>
+        <button className="logout-button" onClick={handleLogoutClick}>Log Out</button>
       </header>
       <div className="profile-list">
         {Array.isArray(profiles) && profiles.length > 0 ? (
