@@ -8,6 +8,7 @@ import AffinityScreen from './components/AffinityScreen';
 import EmailPage from './components/EmailPage';
 import VerificationCodePage from './components/VerificationCodePage';
 import UploadImagesPage from './components/UploadImagesPage';
+import { UserProvider } from './context/UserContext';
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
 
 
   return (
+    <UserProvider>
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
@@ -29,6 +31,7 @@ function App() {
         <Route path="/upload-images" element={<UploadImagesPage />} />
       </Routes>
     </Router>
+    </UserProvider>
   );
 }
 
