@@ -80,7 +80,8 @@ function AffinityScreen() {
                 localStorage.removeItem('user');
                 navigate('/');
             } else {
-                
+                console.error('Unexpected logout response:', response.status, await response.text());
+                setError('Failed to log out. Please try again.');
             }
         } catch (error) {
             setError('Network error: ' + error.message);
