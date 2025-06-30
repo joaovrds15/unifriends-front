@@ -3,6 +3,7 @@ import Footer from './Footer';
 import '../components/components_css/AffinityScreen.css';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
+import Header from './Header';
 
 function AffinityScreen() {
   const [profiles, setProfiles] = useState([]);
@@ -61,33 +62,6 @@ function AffinityScreen() {
     }
   }, []);
 
-
-  const handleLogoutClick = async (e) => {
-        e.preventDefault();
-
-        try {
-            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/logout`, {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            console.log(response);
-            if (response.status === 204) {
-                logoutUser();
-                localStorage.removeItem('user');
-                navigate('/');
-            } else {
-                console.error('Unexpected logout response:', response.status, await response.text());
-                setError('Failed to log out. Please try again.');
-            }
-        } catch (error) {
-            setError('Network error: ' + error.message);
-        }
-    };
-
   const lastProfileElementRef = useCallback(node => {
     if (isLoadingMore) return;
     if (observer.current) observer.current.disconnect();
@@ -143,10 +117,7 @@ function AffinityScreen() {
 
   return (
     <div className="container">
-      <header className="header">
-        <h1>Affinity</h1>
-        <button className="logout-button" onClick={handleLogoutClick}>Log Out</button>
-      </header>
+      <Header />
       <div className="profile-list">
         {Array.isArray(profiles) && profiles.length > 0 ? (
           profiles.map((profile, index) => {
