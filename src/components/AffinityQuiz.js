@@ -27,7 +27,13 @@ const AffinityQuiz = () => {
           },
         });
 
-        if (!response.ok) {
+        if (response.status === 403) {
+          setError('Você já respondeu ao questionário.');
+          setIsLoading(false);
+          return;
+        }
+
+        if (!response.ok && response.status !== 403) {
           throw new Error('Failed to fetch questions');
         }
 
