@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Footer from './Footer';
-import '../components/components_css/AffinityScreen.css';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import Header from './Header';
@@ -25,7 +24,7 @@ function AffinityScreen() {
     setError(null);
     
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/get-results/user/${user.id}?page=${page}&limit=10`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/get-results/user/${user.id}?page=${page}&limit=10`, {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -85,13 +84,12 @@ function AffinityScreen() {
 
   if (isLoading) {
     return (
-      <div className="container">
-        <header className="header">
-          <h1>Affinity</h1>
+      <div className="flex flex-col h-screen max-w-xl bg-white mx-auto">
+        <header className="flex justify-between items-center p-4 bg-white">
         </header>
-        <div className="message-container">
-          <div className="loading-spinner"></div>
-          <p>Loading profiles...</p>
+        <div className="flex flex-col items-center justify-center flex-1">
+          <div className="border-4 border-blue-200 border-t-blue-500 rounded-full w-8 h-8 animate-spin mb-2"></div>
+          <p className="text-gray-600">Loading profiles...</p>
         </div>
         <Footer />
       </div>
@@ -100,13 +98,13 @@ function AffinityScreen() {
 
   if (error && profiles.length === 0) {
     return (
-      <div className="container">
-        <header className="header">
-          <h1>Affinity</h1>
+      <div className="flex flex-col h-screen max-w-xl bg-white mx-auto">
+        <header className="flex justify-between items-center p-4 bg-white">
+          <h1 className="text-xl font-bold">Affinity</h1>
         </header>
-        <div className="message-container">
-          <p>Error loading profiles: {error}</p>
-          <button onClick={() => fetchProfiles(1, false)} className="retry-button">
+        <div className="flex flex-col items-center justify-center flex-1">
+          <p className="text-red-600 mb-2">Error loading profiles: {error}</p>
+          <button onClick={() => fetchProfiles(1, false)} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
             Try Again
           </button>
         </div>
@@ -116,44 +114,44 @@ function AffinityScreen() {
   }
 
   return (
-    <div className="container">
+    <div className="flex flex-col h-screen max-w-md bg-white mx-auto">
       <Header />
-      <div className="profile-list">
+      <div className="flex-1 overflow-y-auto p-5">
         {Array.isArray(profiles) && profiles.length > 0 ? (
           profiles.map((profile, index) => {
             const isLast = profiles.length === index + 1;
             return (
               <div 
                 key={`${profile.id}-${index}`} 
-                className="profile-card"
+                className="flex items-center justify-between bg-gray-50 border border-gray-300 rounded-2xl p-4 mb-4"
                 ref={isLast ? lastProfileElementRef : null}
               >
                 <img 
                   src={profile.profile_picture_url || 'default-profile-pic-url.jpg'}
                   alt={profile.name || 'Profile'} 
-                  className="profile-image" 
+                  className="w-12 h-12 rounded-full"
                 />
-                <div className="profile-info">
-                  <h2 className='profile-name'>{profile.name || 'N/A'}</h2>
-                  <p>Ranking Score: {profile.score !== undefined ? profile.score : 'N/A'}</p>
+                <div className="flex-1 ml-4">
+                  <p className="text-base font-bold">{profile.name || 'N/A'}</p>
+                  <p className="text-gray-500 text-sm">Ranking Score: {profile.score !== undefined ? profile.score : 'N/A'}</p>
                 </div>
-                <button className="view-profile-button">View Profile</button>
+                <button className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">View Profile</button>
               </div>
             );
           })
         ) : (
-          <p className="message-container">Não foram encontrados resultados. Já respondeu o questionário?</p>
+          <p className="text-center text-gray-600">Não foram encontrados resultados. Já respondeu o questionário?</p>
         )}
         
         {isLoadingMore && (
-          <div className="loading-more-container">
-            <div className="loading-spinner"></div>
-            <p>Loading more profiles...</p>
+          <div className="flex flex-col items-center py-5 text-gray-600">
+            <div className="border-4 border-blue-200 border-t-blue-500 rounded-full w-8 h-8 animate-spin mb-2"></div>
+            <p className="text-sm">Loading more profiles...</p>
           </div>
         )}
         
         {!hasMore && profiles.length > 0 && (
-          <div className="end-message">
+          <div className="text-center py-5 text-gray-400 italic">
             <p>You've reached the end of the results!</p>
           </div>
         )}
