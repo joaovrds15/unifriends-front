@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import '../components/components_css/SignUpPage.css';
+// import '../components/components_css/SignUpPage.css'; // Remove this line
 import logoImage from '../icons/image.png';
 import InputMask from 'react-input-mask';
 import { useNavigate } from 'react-router-dom';
@@ -24,7 +24,7 @@ const SignUpPage = ({setEmailVerified}) => {
   useEffect(() => {
     const fetchMajors = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/majors`,{
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/majors`,{
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -108,7 +108,7 @@ const SignUpPage = ({setEmailVerified}) => {
     };
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/register`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/register`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -124,11 +124,14 @@ const SignUpPage = ({setEmailVerified}) => {
   };
 
   return (
-    <form className="signup-container" onSubmit={handleSubmit}>
-      <img src={logoImage} alt="Logo" className="logo" />
-      <h2>Cadastro</h2>
+    <form
+      className="flex flex-col items-center justify-center min-h-screen bg-white font-sans"
+      onSubmit={handleSubmit}
+    >
+      <img src={logoImage} alt="Logo" className="w-24 mb-5" />
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">Cadastro</h2>
 
-      <div className="input-container">
+      <div className="relative w-72 mb-4">
         <input
           type="text"
           placeholder="Nome"
@@ -136,9 +139,10 @@ const SignUpPage = ({setEmailVerified}) => {
           value={registrationData.firstName}
           onChange={handleInputChange}
           required
+          className="w-full px-5 py-2 rounded-full border border-green-700 outline-none text-base placeholder-green-700 focus:ring-2 focus:ring-green-500"
         />
       </div>
-      <div className="input-container">
+      <div className="relative w-72 mb-4">
         <input
           type="text"
           placeholder="Sobrenome"
@@ -146,9 +150,10 @@ const SignUpPage = ({setEmailVerified}) => {
           value={registrationData.lastName}
           onChange={handleInputChange}
           required
+          className="w-full px-5 py-2 rounded-full border border-green-700 outline-none text-base placeholder-green-700 focus:ring-2 focus:ring-green-500"
         />
       </div>
-      <div className="input-container">
+      <div className="relative w-72 mb-4">
         <InputMask
           mask="(99) 99999-9999"
           value={registrationData.phoneNumber}
@@ -156,12 +161,18 @@ const SignUpPage = ({setEmailVerified}) => {
           placeholder="Telefone"
           required
         >
-          {(inputProps) => <input {...inputProps} type="tel" />}
+          {(inputProps) => (
+            <input
+              {...inputProps}
+              type="tel"
+              className="w-full px-5 py-2 rounded-full border border-green-700 outline-none text-base placeholder-green-700 focus:ring-2 focus:ring-green-500"
+            />
+          )}
         </InputMask>
       </div>
-      <div className="input-container">
+      <div className="relative w-72 mb-4">
         <select
-          className="dropdown"
+          className="w-full px-5 py-2 rounded-full border border-green-700 outline-none text-base text-gray-700 focus:ring-2 focus:ring-green-500"
           name="majorId"
           value={registrationData.majorId}
           onChange={handleInputChange}
@@ -175,7 +186,7 @@ const SignUpPage = ({setEmailVerified}) => {
           ))}
         </select>
       </div>
-      <div className="input-container">
+      <div className="relative w-72 mb-4">
         <input
           type={passwordVisible ? "text" : "password"}
           placeholder="Senha"
@@ -183,12 +194,17 @@ const SignUpPage = ({setEmailVerified}) => {
           value={registrationData.password}
           onChange={handleInputChange}
           required
+          className="w-full px-5 py-2 rounded-full border border-green-700 outline-none text-base placeholder-green-700 focus:ring-2 focus:ring-green-500 pr-12"
         />
-        <button className="toggle-password" type="button" onClick={togglePasswordVisibility}>
+        <button
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer focus:outline-none"
+          type="button"
+          onClick={togglePasswordVisibility}
+        >
           <img src={passwordVisible ? hideIcon : showIcon} style={{ width: '25px', height: '25px' }} alt={passwordVisible ? 'Hide' : 'Show'} />
         </button>
       </div>
-      <div className="input-container">
+      <div className="relative w-72 mb-4">
         <input
           type={rePasswordVisible ? "text" : "password"}
           placeholder="Confirmar senha"
@@ -196,17 +212,29 @@ const SignUpPage = ({setEmailVerified}) => {
           value={registrationData.rePassword}
           onChange={handlePasswordChange}
           required
+          className="w-full px-5 py-2 rounded-full border border-green-700 outline-none text-base placeholder-green-700 focus:ring-2 focus:ring-green-500 pr-12"
         />
-        <button className="toggle-password" type="button" onClick={toggleRePasswordVisibility}>
-          <img src={rePasswordVisible ? hideIcon : showIcon} style={{ width: '25px', height: '25px' }} alt={passwordVisible ? 'Hide' : 'Show'} />
+        <button
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer focus:outline-none"
+          type="button"
+          onClick={toggleRePasswordVisibility}
+        >
+          <img src={rePasswordVisible ? hideIcon : showIcon} style={{ width: '25px', height: '25px' }} alt={rePasswordVisible ? 'Hide' : 'Show'} />
         </button>
       </div>
 
-      <div className='error-container'>
-          {errorMessage && <p className="error-text">{errorMessage}</p>}
+      <div className={`${errorMessage ? '' : 'hidden'} mb-2`}>
+      {errorMessage && (
+      <p className="text-red-600 text-sm text-center">{errorMessage}</p>
+    )}
       </div>
 
-      <button className="signup-button" type="submit">Continuar</button>
+      <button
+        className="w-72 py-2 bg-green-700 text-white rounded-full font-medium text-base hover:bg-green-800 transition mb-2"
+        type="submit"
+      >
+        Continuar
+      </button>
     </form>
   );
 };

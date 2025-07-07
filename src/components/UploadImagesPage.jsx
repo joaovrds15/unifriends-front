@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate} from 'react-router-dom';
-import '../components/components_css/UploadImagesPage.css';
+// import '../components/components_css/UploadImagesPage.css'; // Remove this lin
 import profileAvatar from '../icons/user.png';
 import addIcon from '../icons/add.svg';
 import xIcon from '../icons/close.svg';
@@ -57,7 +57,7 @@ const UploadImagesPage = () => {
         formData.append('file', file);
 
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/upload-image`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/upload-image`, {
                 method: 'POST',
                 credentials: 'include',
                 body: formData,
@@ -108,7 +108,7 @@ const UploadImagesPage = () => {
           };
 
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/register`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/register`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -128,64 +128,73 @@ const UploadImagesPage = () => {
     };
 
     return (
-        <div className="profile-container">
-            <div className="background-image">
-                <img src={libraryBackground} alt="Background" className="background-img" />
+        <div className="flex flex-col items-center font-sans pb-5 max-w-lg mx-auto">
+            <div className="w-full h-32 overflow-hidden">
+                <img src={libraryBackground} alt="Background" className="w-full h-full object-cover" />
             </div>
 
-            <div className="profile-section">
-                <div className="profile-avatar-container" onClick={handleProfileImageClick}>
-                    <img src={profilePic} alt="Profile" className="profile-pic" />
+            <div className="flex flex-col items-center relative -mt-12">
+                <div
+                    className="relative w-24 h-24 flex items-center justify-center"
+                    onClick={handleProfileImageClick}
+                >
+                    <img src={profilePic} alt="Profile" className="w-24 h-24 rounded-full border-2 border-white object-cover" />
                     <img
-                        src={isImageUploaded ? xIcon : addIcon} 
+                        src={isImageUploaded ? xIcon : addIcon}
                         alt={isImageUploaded ? "Remove" : "Add"}
                         data-action={isImageUploaded ? "Remove" : "Add"}
-                        className="add-icon-overlay" 
-                        style={{ width: '25px', height: '25px' }} 
+                        className="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full p-1 cursor-pointer border border-gray-200"
                     />
                 </div>
-                <h2>Adicione suas imagens</h2>
-                <input 
+                <h2 className="text-2xl mt-2 font-semibold">Adicione suas imagens</h2>
+                <input
                     type="file"
-                    id="fileInput" 
-                    accept="image/*" 
-                    className='file-input'
+                    id="fileInput"
+                    accept="image/*"
+                    className="hidden"
                     onChange={handleProfileImageChange}
-                    style={{ display: 'none' }}
                 />
             </div>
 
-            <button className="connect-btn" onClick={handleSaveImages}>Salvar</button>
+            <button
+                className="mt-5 py-3 px-8 bg-green-700 text-white w-11/12 rounded-full font-medium text-base hover:bg-green-800 transition"
+                onClick={handleSaveImages}
+            >
+                Salvar
+            </button>
 
-            <div className="image-grid">
+            <div className="grid grid-cols-3 gap-3 mt-5 w-11/12">
                 {gridImages.map((gridImage, index) => (
-                    <div className="image-container" key={index}>
+                    <div className="relative" key={index}>
                         <input
                             type="file"
                             accept="image/*"
-                            className="file-input"
+                            className="hidden"
                             onChange={(event) => handleGridImageChange(event, index)}
-                            style={{ display: 'none' }}
                             id={`gridFileInput${index}`}
                         />
-                        <div className="grid-image-placeholder" onClick={() => document.getElementById(`gridFileInput${index}`).click()}>
+                        <div
+                            className="flex items-center justify-center bg-gray-300 rounded-lg w-full h-24 cursor-pointer overflow-hidden"
+                            onClick={() => document.getElementById(`gridFileInput${index}`).click()}
+                        >
                             {gridImage ? (
-                                <div> 
-                                    <img src={gridImage.imageUrl} alt={`Grid ${index}`} className="grid-image" />
-                                    <img 
-                                        src={xIcon} 
+                                <div className="relative w-full h-full">
+                                    <img src={gridImage.imageUrl} alt={`Grid ${index}`} className="w-full h-full object-cover rounded-lg" />
+                                    <img
+                                        src={xIcon}
                                         alt="Remove"
-                                        className="add-icon-overlay"
-                                        onClick={() => handleRemoveGridImage(index)}
-                                        style={{ width: '25px', height: '25px' }} 
+                                        className="absolute bottom-0 right-0 w-6 h-6 bg-white rounded-full p-1 cursor-pointer border border-gray-200"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleRemoveGridImage(index);
+                                        }}
                                     />
                                 </div>
                             ) : (
-                                <img 
-                                    src={addIcon} 
-                                    alt="Add" 
-                                    className="add-icon-overlay"
-                                    style={{ width: '25px', height: '25px' }} 
+                                <img
+                                    src={addIcon}
+                                    alt="Add"
+                                    className="w-6 h-6"
                                 />
                             )}
                         </div>

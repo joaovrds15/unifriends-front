@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import '../components/components_css/AffinityQuiz.css';
 import Header from './Header';
 import Footer from './Footer';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +18,7 @@ const AffinityQuiz = () => {
     const fetchQuestions = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/questions`, {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/questions`, {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -60,7 +59,7 @@ const AffinityQuiz = () => {
 
   const handleAnswerSelect = (optionId, optionText) => {
     setSelectedAnswer(optionText);
-    
+
     const currentQuestion = questions[currentQuestionIndex];
     if (currentQuestion) {
       setAnswers(prev => ({
@@ -94,8 +93,7 @@ const AffinityQuiz = () => {
         option_id: answerData.optionId,
       }));
 
-
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/answer/save`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/answer/save`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -105,7 +103,7 @@ const AffinityQuiz = () => {
           user_id: user.id,
           quiz_id: 1,
           answers: formattedAnswers
-        }),         
+        }),
       });
 
       if (response.ok) {
@@ -121,10 +119,10 @@ const AffinityQuiz = () => {
 
   if (isLoading) {
     return (
-      <div className="container">
+      <div className="flex flex-col h-screen max-w-md bg-white mx-auto">
         <Header />
-        <div className="quiz-container">
-          <p>Loading questions...</p>
+        <div className="flex-grow p-5 overflow-y-auto flex items-center justify-center">
+          <p className="text-gray-500">Loading questions...</p>
         </div>
         <Footer />
       </div>
@@ -133,10 +131,10 @@ const AffinityQuiz = () => {
 
   if (error) {
     return (
-      <div className="container">
+      <div className="flex flex-col h-screen max-w-md bg-white mx-auto">
         <Header />
-        <div className="quiz-container">
-          <p style={{ color: 'red' }}>{error}</p>
+        <div className="flex-grow p-5 overflow-y-auto flex items-center justify-center">
+          <p className="text-red-600">{error}</p>
         </div>
         <Footer />
       </div>
@@ -145,10 +143,10 @@ const AffinityQuiz = () => {
 
   if (questions.length === 0) {
     return (
-      <div className="container">
+      <div className="flex flex-col h-screen max-w-md bg-white mx-auto">
         <Header />
-        <div className="quiz-container">
-          <p>No questions available</p>
+        <div className="flex-grow p-5 overflow-y-auto flex items-center justify-center">
+          <p className="text-gray-500">No questions available</p>
         </div>
         <Footer />
       </div>
@@ -159,45 +157,41 @@ const AffinityQuiz = () => {
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
   return (
-    <div className="container">
+    <div className="flex flex-col h-screen max-w-md bg-white mx-auto">
       <Header />
-      <div className='quiz-container'>
-        <p className="question-progress">
+      <div className="flex-grow p-5 overflow-y-auto">
+        <p className="text-gray-500 text-sm mb-2">
           Question {currentQuestionIndex + 1} of {questions.length}
         </p>
-        <h2 className="question-title">{currentQuestion.text}</h2>
-        <div className="genre-options">
+        <h2 className="text-xl font-medium text-gray-800 mb-6">{currentQuestion.text}</h2>
+        <div className="flex flex-col gap-3">
           {currentQuestion.options?.map((option) => (
             <button
               key={option.id}
-              className={`genre-btn ${selectedAnswer === option.option_text ? 'selected' : ''}`}
+              className={`w-full px-4 py-4 text-base text-left border rounded-lg transition-all
+                ${selectedAnswer === option.option_text
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
+                }`}
               onClick={() => handleAnswerSelect(option.id, option.option_text)}
             >
               {option.option_text}
             </button>
           ))}
         </div>
-        <div className="navigation-buttons">
-          <button 
-            className="back-btn" 
+        <div className="flex justify-between items-center mt-8">
+          <button
+            className="flex items-center gap-2 px-6 py-3 text-base font-medium rounded-lg border-none bg-gray-200 text-gray-700 transition hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleBack}
             disabled={currentQuestionIndex === 0}
-            style={{ 
-              opacity: currentQuestionIndex === 0 ? 0.5 : 1,
-              cursor: currentQuestionIndex === 0 ? 'not-allowed' : 'pointer'
-            }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
             Back
           </button>
-          <button 
-            className="next-btn"
+          <button
+            className="flex items-center gap-2 px-6 py-3 text-base font-medium rounded-lg border-none bg-green-700 text-white transition hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleNext}
             disabled={!selectedAnswer}
-            style={{ 
-              opacity: !selectedAnswer ? 0.5 : 1,
-              cursor: !selectedAnswer ? 'not-allowed' : 'pointer'
-            }}
           >
             {isLastQuestion ? 'Submit' : 'Next'}
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
