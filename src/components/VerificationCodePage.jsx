@@ -114,7 +114,7 @@ const VerificationCodePage = () => {
       <p className="text-red-600 text-sm text-center mb-2">{errorMessage}</p>
     )}
     <button
-      className="w-72 py-2 bg-green-700 text-white rounded-full font-medium text-base hover:bg-green-800 transition mb-2 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
+      className="w-72 py-2 bg-green-600 text-white rounded-full font-medium text-base hover:bg-green-800 transition mb-2 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
       type="submit"
       onClick={handleVerificationSubmit}
       disabled={timer === 0}
@@ -122,7 +122,7 @@ const VerificationCodePage = () => {
       Verificar e Continuar
     </button>
     <button
-      className="w-72 py-2 bg-green-700 text-white rounded-full font-medium text-base hover:bg-green-800 transition disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
+      className="w-72 py-2 bg-green-600 text-white rounded-full font-medium text-base hover:bg-green-800 transition disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
       type="button"
       style={{ display: timer === 0 ? 'block' : 'none' }}
       disabled={timer !== 0}

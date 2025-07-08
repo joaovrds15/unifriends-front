@@ -157,7 +157,7 @@ const UploadImagesPage = () => {
             </div>
 
             <button
-                className="mt-5 py-3 px-8 bg-green-700 text-white w-11/12 rounded-full font-medium text-base hover:bg-green-800 transition"
+                className="mt-5 py-3 px-8 bg-green-600 text-white w-11/12 rounded-full font-medium text-base hover:bg-green-800 transition"
                 onClick={handleSaveImages}
             >
                 Salvar

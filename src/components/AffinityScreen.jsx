@@ -13,9 +13,11 @@ function AffinityScreen() {
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef();
-  const { user, logoutUser } = useUser();
+  const { user } = useUser();
 
   const fetchProfiles = useCallback(async (page = 1, append = false) => {
+    if (!user?.id) return;
+
     if (page === 1) {
       setIsLoading(true);
     } else {
@@ -59,7 +61,7 @@ function AffinityScreen() {
       setIsLoading(false);
       setIsLoadingMore(false);
     }
-  }, []);
+  }, [user]);
 
   const lastProfileElementRef = useCallback(node => {
     if (isLoadingMore) return;
@@ -78,9 +80,48 @@ function AffinityScreen() {
     if (node) observer.current.observe(node);
   }, [isLoadingMore, hasMore, fetchProfiles]);
 
+  const sendConnectionRequest = async (userId) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/connections/request/user/${userId}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      return response;
+    } catch (error) {
+      setError('Algo deu errado. Tente novamente mais tarde.');
+    }
+  };
+
+ const handleConnectSubmit = async (userId) => {
+    if (error) {
+      return;
+    }
+
+    try {
+      const response = await sendConnectionRequest(userId);
+      if (response && response.status === 201) {
+        setProfiles(prevProfiles =>
+          prevProfiles.map(profile =>
+            profile.user_id === userId
+              ? { ...profile, has_pending_connection_request: true }
+              : profile
+          )
+        );
+      }
+    } catch (error) {
+      setError('Algo deu errado. Tente novamente mais tarde.');
+    }
+  };
+
   useEffect(() => {
-    fetchProfiles(1, false);
-  }, [fetchProfiles]);
+    if (user?.id) {
+        fetchProfiles(1, false);
+    }
+  }, [user, fetchProfiles]);
 
   if (isLoading) {
     return (
@@ -122,20 +163,39 @@ function AffinityScreen() {
             const isLast = profiles.length === index + 1;
             return (
               <div 
-                key={`${profile.id}-${index}`} 
-                className="flex items-center justify-between bg-gray-50 border border-gray-300 rounded-2xl p-4 mb-4"
-                ref={isLast ? lastProfileElementRef : null}
+              key={`${profile.user_id}-${index}`} 
+              className="flex items-center justify-between bg-gray-50 border border-gray-300 rounded-2xl p-4 mb-4"
+              ref={isLast ? lastProfileElementRef : null}
               >
-                <img 
-                  src={profile.profile_picture_url || 'default-profile-pic-url.jpg'}
-                  alt={profile.name || 'Profile'} 
-                  className="w-12 h-12 rounded-full"
-                />
-                <div className="flex-1 ml-4">
-                  <p className="text-base font-bold">{profile.name || 'N/A'}</p>
-                  <p className="text-gray-500 text-sm">Ranking Score: {profile.score !== undefined ? profile.score : 'N/A'}</p>
-                </div>
-                <button className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">View Profile</button>
+              <img 
+                src={profile.profile_picture_url || 'default-profile-pic-url.jpg'}
+                alt={profile.name || 'Profile'} 
+                className="w-12 h-12 rounded-full"
+              />
+              <div className="flex-1 ml-4">
+                <p className="text-base font-bold">{profile.name || 'N/A'}</p>
+                <p className="text-gray-500 text-sm">Ranking Score: {profile.score !== undefined ? profile.score : 'N/A'}</p>
+              </div>
+              <div className='flex flex-col space-y-2 w-22'>
+                <button className="bg-green-600 text-sm text-white px-4 py-2 rounded-lg hover:bg-green-800 transition w-full" onClick={() => navigate(`/profile/${profile.user_id}`)}>Perfil</button>
+                {profile.has_pending_connection_request ? (
+                  <button
+                    className="bg-gray-300 text-sm text-gray-600 px-4 py-2 rounded-lg w-full cursor-not-allowed"
+                    disabled
+                  >
+                    Solicitação enviada
+                  </button>
+                ) : profile.has_connection ? (
+                  <div className="h-9"></div>
+                ) : (
+                  <button
+                    className="bg-blue-500 text-sm text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition w-full"
+                    onClick={() => handleConnectSubmit(profile.user_id)}
+                  >
+                    Conectar
+                  </button>
+                )}
+              </div>
               </div>
             );
           })

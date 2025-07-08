@@ -36,7 +36,7 @@ const ProfilePage = () => {
                 </div>
             </div>
 
-            <button className="block mx-auto mt-5 py-3 px-8 bg-green-700 text-white w-11/12  rounded-full font-medium text-base hover:bg-green-800 transition">
+            <button className="block mx-auto mt-5 py-3 px-8 bg-green-600 text-white w-11/12  rounded-full font-medium text-base hover:bg-green-800 transition">
                 Connect
             </button>
 
