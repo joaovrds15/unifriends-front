@@ -164,7 +164,7 @@ function AffinityScreen() {
             return (
               <div 
               key={`${profile.user_id}-${index}`} 
-              className="flex items-center justify-between bg-gray-50 border border-gray-300 rounded-2xl p-4 mb-4"
+              className="flex items-center justify-between bg-gray-50 border border-gray-300  shadow-md shadow-gray-300 rounded-2xl p-4 mb-4"
               ref={isLast ? lastProfileElementRef : null}
               >
               <img 
@@ -174,11 +174,11 @@ function AffinityScreen() {
               />
               <div className="flex-1 ml-4">
                 <p className="text-base font-bold">{profile.name || 'N/A'}</p>
-                <p className="text-gray-500 text-sm">Ranking Score: {profile.score !== undefined ? profile.score : 'N/A'}</p>
+                <p className="text-gray-500 text-sm">Pontuação: {profile.score !== undefined ? profile.score : 'N/A'}</p>
               </div>
               <div className='flex flex-col space-y-2 w-22'>
-                <button className="bg-green-600 text-sm text-white px-4 py-2 rounded-lg hover:bg-green-800 transition w-full" onClick={() => navigate(`/profile/${profile.user_id}`)}>Perfil</button>
-                {profile.has_pending_connection_request ? (
+                <button className="bg-green-600 text-sm text-white px-2 py-2 rounded-lg hover:bg-green-800 transition w-full" onClick={() => navigate(`/profile/${profile.user_id}`)}>Perfil</button>
+                {profile.has_pending_connection_request && profile.connection_request.requesting_user_id == user.id ? (
                   <button
                     className="bg-gray-300 text-sm text-gray-600 px-4 py-2 rounded-lg w-full cursor-not-allowed"
                     disabled
@@ -186,7 +186,9 @@ function AffinityScreen() {
                     Solicitação enviada
                   </button>
                 ) : profile.has_connection ? (
-                  <div className="h-9"></div>
+                  <button className="bg-green-600 text-sm text-white px-2 py-2 rounded-lg hover:bg-green-800 transition w-full=======" onClick={() => navigate(`/profile/${profile.user_id}`)}>Mensagens</button>
+                ) : profile.has_pending_connection_request && profile.connection_request.requesting_user_id != user.id ? (
+                  <button disabled className="bg-gray-300 text-sm text-gray-600 px-4 py-2 rounded-lg w-full cursor-not-allowed" onClick={() => navigate(`/profile/${profile.user_id}`)}>Aprovação pendente</button>
                 ) : (
                   <button
                     className="bg-blue-500 text-sm text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition w-full"
