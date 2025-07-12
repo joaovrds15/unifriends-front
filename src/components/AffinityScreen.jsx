@@ -96,7 +96,7 @@ function AffinityScreen() {
     }
   };
 
- const handleConnectSubmit = async (userId) => {
+const handleConnectSubmit = async (userId) => {
     if (error) {
       return;
     }
@@ -104,10 +104,15 @@ function AffinityScreen() {
     try {
       const response = await sendConnectionRequest(userId);
       if (response && response.status === 201) {
+        const data = await response.json();
         setProfiles(prevProfiles =>
           prevProfiles.map(profile =>
             profile.user_id === userId
-              ? { ...profile, has_pending_connection_request: true }
+              ? {
+                  ...profile,
+                  has_pending_connection_request: true,
+                  connection_request: data.data,
+                }
               : profile
           )
         );
@@ -186,7 +191,7 @@ function AffinityScreen() {
                     Solicitação enviada
                   </button>
                 ) : profile.has_connection ? (
-                  <button className="bg-green-600 text-sm text-white px-2 py-2 rounded-lg hover:bg-green-800 transition w-full=======" onClick={() => navigate(`/profile/${profile.user_id}`)}>Mensagens</button>
+                  <button className="bg-green-600 text-sm text-white px-2 py-2 rounded-lg hover:bg-green-800 transition w-full" onClick={() => navigate(`/profile/${profile.user_id}`)}>Mensagens</button>
                 ) : profile.has_pending_connection_request && profile.connection_request.requesting_user_id != user.id ? (
                   <button disabled className="bg-gray-300 text-sm text-gray-600 px-4 py-2 rounded-lg w-full cursor-not-allowed" onClick={() => navigate(`/profile/${profile.user_id}`)}>Aprovação pendente</button>
                 ) : (

@@ -136,6 +136,7 @@ function ConnectionRequests() {
               />
               <div className="flex-1 ml-4">
                 <p className="text-base font-bold">{request.requesting_user.name || 'N/A'}</p>
+                <p className="text-gray-500 text-sm">Pontuação: {request.requesting_user.score  !== undefined ? request.requesting_user.score : 'N/A'}</p>
               </div>
               <div className='flex flex-col space-y-2 w-22'>
                 <button className="bg-green-600 text-sm text-white px-4 py-2 rounded-lg hover:bg-green-800 transition w-full" onClick={() => handleRequestAnswer(request.id, 'accept')}>Aceitar</button>

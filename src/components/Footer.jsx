@@ -4,6 +4,7 @@ import profile from '../icons/profile.svg';
 import affinity from '../icons/affinity.svg';
 import pencil from '../icons/pencil.svg';
 import search from '../icons/search.svg';
+import chat from '../icons/chat.svg';
 import connectionRequest from '../icons/add-friend.svg';
 
 const Footer = () => {
@@ -43,6 +44,12 @@ const Footer = () => {
       <img
         src={pencil}
         alt="pencil-answer"
+        className="w-6 h-6 cursor-pointer"
+        onClick={handlePencilClick}
+      />
+      <img
+        src={chat}
+        alt="chat"
         className="w-6 h-6 cursor-pointer"
         onClick={handlePencilClick}
       />
