@@ -189,7 +189,7 @@ const AffinityQuiz = () => {
             Back
           </button>
           <button
-            className="flex items-center gap-2 px-6 py-3 text-base font-medium rounded-lg border-none bg-green-700 text-white transition hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-6 py-3 text-base font-medium rounded-lg border-none bg-green-600 text-white transition hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleNext}
             disabled={!selectedAnswer}
           >

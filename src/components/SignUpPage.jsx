@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-// import '../components/components_css/SignUpPage.css'; // Remove this line
 import logoImage from '../icons/image.png';
 import InputMask from 'react-input-mask';
 import { useNavigate } from 'react-router-dom';
@@ -230,7 +229,7 @@ const SignUpPage = ({setEmailVerified}) => {
       </div>
 
       <button
-        className="w-72 py-2 bg-green-700 text-white rounded-full font-medium text-base hover:bg-green-800 transition mb-2"
+        className="w-72 py-2 bg-green-600 text-white rounded-full font-medium text-base hover:bg-green-800 transition mb-2"
         type="submit"
       >
         Continuar

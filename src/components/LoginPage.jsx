@@ -90,7 +90,7 @@ const LoginPage = () => {
             {error && <p className="text-red-500 text-sm mb-0 text-center">Usuário ou Senha Incorreta</p>}
             <button 
                 type="submit" 
-                className="w-full py-2 bg-green-700 text-white rounded-full hover:bg-green-800 active:bg-green-900 transition focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full py-2 bg-green-600 text-white rounded-full hover:bg-green-800 active:bg-green-900 transition focus:outline-none focus:ring-2 focus:ring-green-500"
             >
                 Entrar
             </button>

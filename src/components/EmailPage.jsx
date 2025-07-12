@@ -64,7 +64,7 @@ const EmailPage = () => {
         <p className="text-red-600 text-sm text-center mb-2">{errorMessage}</p>
       )}
       <button
-        className="w-72 py-2 bg-green-700 text-white rounded-full font-medium text-base hover:bg-green-800 transition mb-2"
+        className="w-72 py-2 bg-green-600 text-white rounded-full font-medium text-base hover:bg-green-800 transition mb-2"
         type="submit"
         onClick={handleEmailSubmit}
       >

@@ -9,6 +9,7 @@ import EmailPage from './components/EmailPage';
 import AffinityQuiz from './components/AffinityQuiz';
 import VerificationCodePage from './components/VerificationCodePage';
 import UploadImagesPage from './components/UploadImagesPage';
+import ConnectionRequests from './components/ConnectionRequests';
 import PrivateRoute from './components/PrivateRoute';
 import { UserProvider } from './context/UserContext';
 
@@ -51,6 +52,14 @@ function App() {
             element={
               <PrivateRoute>
                 <AffinityScreen />
+              </PrivateRoute>
+            } 
+          />
+          <Route
+            path="/connection-requests"
+            element={
+              <PrivateRoute>
+                <ConnectionRequests />
               </PrivateRoute>
             } 
           />
