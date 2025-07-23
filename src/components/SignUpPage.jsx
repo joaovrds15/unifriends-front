@@ -1,18 +1,22 @@
 import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
 import logoImage from '../icons/image.png';
 import InputMask from 'react-input-mask';
 import { useNavigate } from 'react-router-dom';
 import { RegistrationContext } from '../context/RegistrationContext';
 import showIcon from '../icons/show.svg';
 import hideIcon from '../icons/hide.svg';
+import { getMajors, sendRegistrationData } from '../services/registrationService';
+import { useUser } from '../context/UserContext';
+
 
 const SignUpPage = ({setEmailVerified}) => {
-  const CREATED = 201;
   const [majors, setMajors] = useState([]);
   const { registrationData, setRegistrationData } = useContext(RegistrationContext);
   const [errorMessage, setErrorMessage] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [rePasswordVisible, setRePasswordVisible] = useState(false);
+  const { loginUser } = useUser();
 
   const navigate = useNavigate();
 
@@ -20,28 +24,17 @@ const SignUpPage = ({setEmailVerified}) => {
     setEmailVerified(true);
   }, [setEmailVerified]);
 
-  useEffect(() => {
-    const fetchMajors = async () => {
-      try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/majors`,{
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-        });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setMajors(data.majors);
-      } catch (error) {
-        console.error('Error fetching majors:', error);
-      }
-    };
-
-    fetchMajors();
-  }, []);
+ useEffect(() => {
+  const fetchMajors = async () => {
+    try {
+      const response = await getMajors()
+      setMajors(response.data.majors);
+    } catch (error) {
+      setErrorMessage('Algo deu errado');
+    }
+  };
+  fetchMajors();
+}, []);
 
   useEffect(() => {
     const savedData = localStorage.getItem('registrationData');
@@ -86,37 +79,18 @@ const SignUpPage = ({setEmailVerified}) => {
     }
 
     try {
-      const response = await handleRegistrationSubmit();
-      if (response.status === CREATED) {
-        navigate('/upload-images');
-        localStorage.removeItem('registrationData');
-      }
-    } catch (error) {
-      setErrorMessage('Algo deu errado. Tente novamente mais tarde.');
-    }
-  };
+      const formattedData = {
+        name: registrationData.firstName,
+        email: registrationData.email,
+        password: registrationData.password,
+        re_password: registrationData.rePassword,
+        phone_number: registrationData.phoneNumber.replace(/\D/g, ''),
+        major_id: parseInt(registrationData.majorId),
+      };
 
-  const handleRegistrationSubmit = async () => {
-    const formattedData = {
-      name: registrationData.firstName,
-      email: registrationData.email,
-      password: registrationData.password,
-      re_password: registrationData.rePassword,
-      phone_number: registrationData.phoneNumber.replace(/\D/g, ''),
-      major_id: parseInt(registrationData.majorId),
-    };
-
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/register`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formattedData),
-      });
-
-      return response;
+      const response = await sendRegistrationData(formattedData);
+      loginUser(response.data.data);
+      navigate('/upload-images');
     } catch (error) {
       setErrorMessage('Algo deu errado. Tente novamente mais tarde.');
     }
@@ -136,17 +110,6 @@ const SignUpPage = ({setEmailVerified}) => {
           placeholder="Nome"
           name="firstName"
           value={registrationData.firstName}
-          onChange={handleInputChange}
-          required
-          className="w-full px-5 py-2 rounded-full border border-green-700 outline-none text-base placeholder-green-700 focus:ring-2 focus:ring-green-500"
-        />
-      </div>
-      <div className="relative w-72 mb-4">
-        <input
-          type="text"
-          placeholder="Sobrenome"
-          name="lastName"
-          value={registrationData.lastName}
           onChange={handleInputChange}
           required
           className="w-full px-5 py-2 rounded-full border border-green-700 outline-none text-base placeholder-green-700 focus:ring-2 focus:ring-green-500"

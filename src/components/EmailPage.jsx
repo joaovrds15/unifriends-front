@@ -2,42 +2,20 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logoImage from '../icons/image.png';
 import { RegistrationContext } from '../context/RegistrationContext';
+import { submitVerificationEmail } from '../services/registrationService';
 
 const EmailPage = () => {
-  const CREATED = 201;
-  const OK = 200;
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
   const { registrationData, setRegistrationData } = useContext(RegistrationContext);
 
-  const sendVerificationEmail = async (email) => {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/verify/email/` + email, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const data = await response.json();
-      if (response.status === CREATED || response.status === OK) {
-        return data;
-      }
-      setErrorMessage(data.error || 'Algo deu errado. Tente novamente mais tarde.');
-    } catch (error) {
-      setErrorMessage('Algo deu errado. Tente novamente mais tarde.');
-    }
-  };
   
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
     if (registrationData.email.endsWith('@estudantes.ifg.edu.br')) {
       try {
-        const data = await sendVerificationEmail(registrationData.email);
-        if (data) {
-          navigate('/signup/verification');
-        }
+        await submitVerificationEmail(registrationData.email);
+        navigate('/signup/verification');
       } catch (error) {
         setErrorMessage('Algo deu errado. Tente novamente mais tarde.');
       }

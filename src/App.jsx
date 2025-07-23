@@ -28,8 +28,6 @@ function App() {
             path="/signup" 
             element={<SignUpPage setEmailVerified={setEmailVerified} />}
           />
-          <Route path="/upload-images" element={<UploadImagesPage />} />
-          
           {/* Private routes - require authentication */}
           <Route 
             path="/profile" 
@@ -44,6 +42,14 @@ function App() {
             element={
               <PrivateRoute>
                 <AffinityQuiz />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/upload-images" 
+            element={
+              <PrivateRoute>
+                <UploadImagesPage />
               </PrivateRoute>
             } 
           />

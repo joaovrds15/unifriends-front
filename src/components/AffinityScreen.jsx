@@ -3,6 +3,7 @@ import Footer from './Footer';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import Header from './Header';
+import { getResults } from '../services/userService';
 
 function AffinityScreen() {
   const [profiles, setProfiles] = useState([]);
@@ -26,30 +27,18 @@ function AffinityScreen() {
     setError(null);
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/get-results/user/${user.id}?page=${page}&limit=10`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      if (Array.isArray(data.data)) {
+      const response = await getResults(user.id, page)
+      const data = response.data.data
+      if (Array.isArray(data)) {
         if (append) {
-          setProfiles(prev => [...prev, ...data.data]);
+          setProfiles(prev => [...prev, ...data]);
         } else {
-          setProfiles(data.data);
+          setProfiles(data);
         }
         
-        setHasMore(data.data.length === 10);
+        setHasMore(data.length === 10);
       } else {
-        console.error('API response for profiles is not an array:', data.data);
+        console.error('API response for profiles is not an array:', data);
         if (!append) setProfiles([]);
         setError('Received invalid data format for profiles.');
       }

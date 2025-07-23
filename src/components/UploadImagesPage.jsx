@@ -1,11 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate} from 'react-router-dom';
-// import '../components/components_css/UploadImagesPage.css'; // Remove this lin
 import profileAvatar from '../icons/user.png';
 import addIcon from '../icons/add.svg';
 import xIcon from '../icons/close.svg';
+import Toast from './Toast';
 import libraryBackground from '../temp/Image.png';
 import { RegistrationContext } from '../context/RegistrationContext';
+import { uploadProfilePicture, uploadUserImage } from '../services/userService';
 
 const UploadImagesPage = () => {
     const navigate = useNavigate();
@@ -15,6 +16,7 @@ const UploadImagesPage = () => {
     const [isImageUploaded, setIsImageUploaded] = useState(false);
     const [gridImages, setGridImages] = useState(Array(7).fill(null));
     const { registrationData, setRegistrationData } = useContext(RegistrationContext);
+    const [error, setError] = useState(null);
 
     const handleProfileImageChange = (event) => {
         const file = event.target.files[0];
@@ -57,78 +59,45 @@ const UploadImagesPage = () => {
         formData.append('file', file);
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/upload-image`, {
-                method: 'POST',
-                credentials: 'include',
-                body: formData,
-            });
-
-            if (response.status == 201) {
-                const data = await response.json();
-                return data['image-url'];
-            } else {
-                console.error('Failed to upload image');
-            }
+            await uploadUserImage(formData)
         } catch (error) {
-            console.error('Error uploading image:', error);
+            setError("Erro ao enviar imagem. Tente novamente mais tarde");
+        }
+        return null;
+    };
+
+    const uploadProfileImage = async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            await uploadProfilePicture(formData)
+        } catch (error) {
+            setError("Erro ao enviar imagem. Tente novamente mais tarde");
         }
         return null;
     };
 
     const handleSaveImages = async () => {
-        let profilePictureUrl = profilePic;
         if (profilePicFile) {
-            profilePictureUrl = await uploadImage(profilePicFile);
+            await uploadProfileImage(profilePicFile);
         }
 
-        const usersImages = await Promise.all(
+        await Promise.all(
             gridImages.map(async (gridImage) => {
                 if (gridImage && gridImage.file) {
-                    return await uploadImage(gridImage.file);
+                    await uploadImage(gridImage.file);
                 }
-                return null;
             })
         );
-
-        setRegistrationData({
-            ...registrationData,
-            profilePictureUrl,
-            usersImages: usersImages.filter((url) => url !== null),
-        });
-
-        const formattedData = {
-            name: registrationData.firstName,
-            email: registrationData.email,
-            password: registrationData.password,
-            re_password: registrationData.rePassword,
-            phone_number: registrationData.phoneNumber.replace(/\D/g, ''),
-            profile_picture_url: registrationData.profilePictureUrl,
-            images: registrationData.usersImages,
-            major_id: parseInt(registrationData.majorId),
-          };
-
-        try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/register`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formattedData),
-            });
-    
-            if (response.ok) {
-                navigate('/affinity');
-            } else {
-                console.error('Failed to save registration data');
-            }
-        } catch (error) {
-            console.error('Error saving registration data:', error);
-        }
+        navigate('/affinity-quiz');
     };
+
+    const hasUploadedImages = profilePicFile || gridImages.some(image => image !== null);
 
     return (
         <div className="flex flex-col items-center font-sans pb-5 max-w-lg mx-auto">
+            <Toast message={error} onClose={() => setError(null)} />
             <div className="w-full h-32 overflow-hidden">
                 <img src={libraryBackground} alt="Background" className="w-full h-full object-cover" />
             </div>
@@ -160,7 +129,7 @@ const UploadImagesPage = () => {
                 className="mt-5 py-3 px-8 bg-green-600 text-white w-11/12 rounded-full font-medium text-base hover:bg-green-800 transition"
                 onClick={handleSaveImages}
             >
-                Salvar
+                {hasUploadedImages ? 'Salvar' : 'Continuar'}
             </button>
 
             <div className="grid grid-cols-3 gap-3 mt-5 w-11/12">

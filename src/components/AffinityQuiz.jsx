@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { HttpStatusCode } from 'axios';
 import Header from './Header';
 import Footer from './Footer';
+import Toast from './Toast';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
+import { getQuestions, submitUserAnswers } from '../services/userService';
 
 const AffinityQuiz = () => {
   const [questions, setQuestions] = useState([]);
@@ -10,7 +13,7 @@ const AffinityQuiz = () => {
   const [answers, setAnswers] = useState({});
   const [selectedAnswer, setSelectedAnswer] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { user } = useUser();
 
@@ -18,30 +21,16 @@ const AffinityQuiz = () => {
     const fetchQuestions = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/questions`, {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (response.status === 403) {
+        const response = await getQuestions()
+        setQuestions(response.data.data || []);
+        setIsLoading(false);
+      } catch (error) {
+        if (error.response.status === HttpStatusCode.Forbidden) {
           setError('Você já respondeu ao questionário.');
           setIsLoading(false);
           return;
         }
-
-        if (!response.ok && response.status !== 403) {
-          throw new Error('Failed to fetch questions');
-        }
-
-        const responseData = await response.json();
-        setQuestions(responseData.data || []);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error fetching questions:', error);
-        setError('Failed to load questions');
+        setError('Falha ao carregar perguntas. Tente novamente mais tarde');
         setIsLoading(false);
       }
     };
@@ -93,27 +82,18 @@ const AffinityQuiz = () => {
         option_id: answerData.optionId,
       }));
 
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/answer/save`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      await submitUserAnswers(
+        {
           user_id: user.id,
           quiz_id: 1,
           answers: formattedAnswers
-        }),
-      });
+        }
+      )
 
-      if (response.ok) {
-        navigate('/affinity');
-      } else {
-        setError('Failed to submit answers');
-      }
+      navigate('/affinity');
+
     } catch (error) {
-      console.error('Error submitting answers:', error);
-      setError('Failed to submit answers');
+      setError('Falha ao enviar respotas');
     }
   };
 
@@ -146,7 +126,7 @@ const AffinityQuiz = () => {
       <div className="flex flex-col h-screen max-w-md bg-white mx-auto">
         <Header />
         <div className="flex-grow p-5 overflow-y-auto flex items-center justify-center">
-          <p className="text-gray-500">No questions available</p>
+          <p className="text-gray-500">Não há perguntas disponíveis</p>
         </div>
         <Footer />
       </div>
@@ -158,10 +138,14 @@ const AffinityQuiz = () => {
 
   return (
     <div className="flex flex-col h-screen max-w-md bg-white mx-auto">
+      <Toast message={error} onClose={() => setError(null)} />
       <Header />
       <div className="flex-grow p-5 overflow-y-auto">
+        <p className="text-gray-800 text-xl mb-6 mt-4">
+          Responda para descobrir afinidade
+        </p>
         <p className="text-gray-500 text-sm mb-2">
-          Question {currentQuestionIndex + 1} of {questions.length}
+          Questão {currentQuestionIndex + 1} de {questions.length}
         </p>
         <h2 className="text-xl font-medium text-gray-800 mb-6">{currentQuestion.text}</h2>
         <div className="flex flex-col gap-3">
@@ -186,14 +170,14 @@ const AffinityQuiz = () => {
             disabled={currentQuestionIndex === 0}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-            Back
+            Voltar
           </button>
           <button
             className="flex items-center gap-2 px-6 py-3 text-base font-medium rounded-lg border-none bg-green-600 text-white transition hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleNext}
             disabled={!selectedAnswer}
           >
-            {isLastQuestion ? 'Submit' : 'Next'}
+            {isLastQuestion ? 'Enviar' : 'Avançar'}
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
           </button>
         </div>

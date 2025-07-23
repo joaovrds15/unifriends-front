@@ -5,6 +5,7 @@ import { useUser } from '../context/UserContext';
 function Header() {
     const navigate = useNavigate();
     const { user, logoutUser } = useUser();
+    const errorMessage = 'Algo deu errado ao sair'
     const [error, setError] = React.useState(null);
 
     React.useEffect(() => {
@@ -25,16 +26,15 @@ function Header() {
                 },
             });
 
-            console.log(response);
             if (response.status === 204) {
                 logoutUser();
                 localStorage.removeItem('user');
                 navigate('/');
             } else {
-                console.error('Unexpected logout response:', response.status, await response.text());
+                throw new Error(errorMessage)
             }
         } catch (error) {
-            setError('Network error: ' + error.message);
+            setError(errorMessage);
         }
     };
 

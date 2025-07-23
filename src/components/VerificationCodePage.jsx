@@ -1,7 +1,9 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
 import logoImage from '../icons/image.png';
-import { useNavigate} from 'react-router-dom';
+import { HttpStatusCode } from 'axios';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { RegistrationContext } from '../context/RegistrationContext';
+import { getVerificationCodeExpiration, sendVerificationCode, submitVerificationEmail } from '../services/registrationService';
 
 const VerificationCodePage = () => {
   const navigate = useNavigate();
@@ -14,15 +16,8 @@ const VerificationCodePage = () => {
 
   const getExpirationTime = useCallback(async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/verify/code/${email}`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const data = await response.json();
-      return response.ok ? data.expiration_time : 0;
+      const response = await getVerificationCodeExpiration(registrationData.email);
+      return response.data.expiration_time
     } catch (error) {
       return 0;
     }
@@ -49,46 +44,24 @@ const VerificationCodePage = () => {
   const handleVerificationSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/verify/email`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          verification_code: Number(code),
-        }),
-      });
-
-      if (response.status === 401) {
+      await sendVerificationCode(email, code);
+      navigate('/signup');
+    } catch (error) {
+      if (error.response.status == HttpStatusCode.Unauthorized)
         setErrorMessage('Código de verificação inválido');
         return;
       }
-      navigate('/signup');
-    } catch (error) {
       setErrorMessage('Algo deu errado. Tente novamente mais tarde.');
-    }
   };
 
   const handleResendCode = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/verify/email/${email}`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await submitVerificationEmail(email)
       setErrorMessage('');
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error('Failed to resend verification code');
-      }
-      setTimer(data.expiration_time);
+      setTimer(response.data.expiration_time);
     } catch (error) {
         setTimer(0);
-        setErrorMessage('Algo deu errado. Tente novamente mais tarde.');
+        setErrorMessage('Failed to resend verification code');
     }
   };
 
