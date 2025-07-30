@@ -22,6 +22,14 @@ const Footer = () => {
     navigate('/connection-requests');
   };
 
+   const handleMessageClick = () => {
+    navigate('/messages');
+  };
+
+  const handleProfileClick = () => {
+    navigate('/profile');
+  };
+
   return (
     <footer className="flex justify-around py-2 bg-white border-t border-gray-300">
       <img
@@ -29,11 +37,6 @@ const Footer = () => {
         alt="logo-handshake"
         className="w-6 h-6 cursor-pointer"
         onClick={handleAffinityClick}
-      />
-      <img
-        src={search}
-        alt="logo-magnifying-glass"
-        className="w-6 h-6 cursor-pointer"
       />
       <img
         src={connectionRequest}
@@ -51,12 +54,13 @@ const Footer = () => {
         src={chat}
         alt="chat"
         className="w-6 h-6 cursor-pointer"
-        onClick={handlePencilClick}
+        onClick={handleMessageClick}
       />
       <img
         src={profile}
         alt="profile-icon"
         className="w-6 h-6 cursor-pointer"
+        onClick={handleProfileClick}
       />
     </footer>
   );

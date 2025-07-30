@@ -86,6 +86,7 @@ const SignUpPage = ({setEmailVerified}) => {
         re_password: registrationData.rePassword,
         phone_number: registrationData.phoneNumber.replace(/\D/g, ''),
         major_id: parseInt(registrationData.majorId),
+        description: registrationData.description,
       };
 
       const response = await sendRegistrationData(formattedData);
@@ -147,6 +148,18 @@ const SignUpPage = ({setEmailVerified}) => {
             </option>
           ))}
         </select>
+      </div>
+      <div className="relative w-72 mb-4">
+        <textarea
+          placeholder="Descreva sobre você... (ex: Olá! Sou estudante de Engenharia e adoro jogos de tabuleiro e programação.)"
+          name="description"
+          value={registrationData.description}
+          onChange={handleInputChange}
+          required
+          rows="4"
+          maxLength={290}
+          className="w-full px-5 py-3 rounded-xl border border-green-700 outline-none text-base placeholder-green-700 focus:ring-2 focus:ring-green-500"
+        ></textarea>
       </div>
       <div className="relative w-72 mb-4">
         <input

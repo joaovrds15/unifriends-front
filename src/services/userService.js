@@ -63,3 +63,53 @@ export const submitUserAnswers = (answers) => {
         }
     )
 }
+
+export const getConnections = () => {
+    return apiClient.get(
+        '/connections',
+        {
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            withCredentials: true,
+            redirectStatus: HttpStatusCode.Unauthorized,
+            authRedirectPath: '/login'
+        }
+    )
+}
+
+export const getMessages = (connectionId) => {
+    return apiClient.get(
+         `/connections/messages/${connectionId}`,
+        {
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            withCredentials: true,
+            redirectStatus: HttpStatusCode.Unauthorized,
+            authRedirectPath: '/login'
+        }
+    )
+}
+
+export const getUserProfile = (userId) => {
+    return apiClient.get(
+        `/users/${userId}`,
+        {
+            withCredentials: true,
+            redirectStatus: HttpStatusCode.Unauthorized,
+            authRedirectPath: '/login'
+        }
+    )
+}
+
+export const getMyOwnProfile = () => {
+    return apiClient.get(
+        '/users/profile',
+        {
+            withCredentials: true,
+            redirectStatus: HttpStatusCode.Unauthorized,
+            authRedirectPath: '/login'
+        }
+    )
+}

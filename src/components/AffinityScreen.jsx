@@ -160,6 +160,7 @@ const handleConnectSubmit = async (userId) => {
               key={`${profile.user_id}-${index}`} 
               className="flex items-center justify-between bg-gray-50 border border-gray-300  shadow-md shadow-gray-300 rounded-2xl p-4 mb-4"
               ref={isLast ? lastProfileElementRef : null}
+              onClick={() => navigate(`/profile/${profile.user_id}`)}
               >
               <img 
                 src={profile.profile_picture_url || 'default-profile-pic-url.jpg'}

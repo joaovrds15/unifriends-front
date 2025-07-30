@@ -15,6 +15,7 @@ export const RegistrationProvider = ({ children }) => {
       profilePictureUrl: '',
       usersImages: [],
       majorId: '',
+      description: '',
     };
   });
 
