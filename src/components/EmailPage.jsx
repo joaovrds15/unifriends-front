@@ -9,19 +9,14 @@ const EmailPage = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const { registrationData, setRegistrationData } = useContext(RegistrationContext);
 
-  
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
-    if (registrationData.email.endsWith('@estudantes.ifg.edu.br')) {
       try {
         await submitVerificationEmail(registrationData.email);
         navigate('/signup/verification');
       } catch (error) {
         setErrorMessage('Algo deu errado. Tente novamente mais tarde.');
       }
-    } else {
-      setErrorMessage('Insira um e-mail IFG válido');
-    }
   };
 
   return (
