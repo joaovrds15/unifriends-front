@@ -15,7 +15,7 @@ const Chat = () => {
   const { user } = useUser();
 
   useEffect(() => {
-    socketRef.current = new WebSocket("http://localhost:8090/api/chat");
+    socketRef.current = new WebSocket("http://44.204.5.25:8090/api/chat");
     
     // Connection opened
     socketRef.current.onopen = () => {
