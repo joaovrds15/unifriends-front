@@ -129,11 +129,6 @@ const handleSendMessage = (e) => {
         ref={messagesContainerRef} 
         className="flex-1 overflow-y-auto p-4 space-y-4"
       >
-        {/* Date separator */}
-        <div className="text-center my-4">
-          <span className="text-sm text-gray-500">October 22, 2023</span>
-        </div>
-
         {/* Chat messages */}
         {chatMessages.map((msg) => {
           const isCurrentUser = msg.sender_id === user?.id;
