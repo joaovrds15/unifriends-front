@@ -4,7 +4,7 @@ import profileAvatar from '../icons/user.png';
 import addIcon from '../icons/add.svg';
 import xIcon from '../icons/close.svg';
 import Toast from './Toast';
-import libraryBackground from '../temp/Image.png';
+import libraryBackground from '../assets/library_background.png';
 import { RegistrationContext } from '../context/RegistrationContext';
 import { uploadProfilePicture, uploadUserImage } from '../services/userService';
 

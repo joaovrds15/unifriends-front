@@ -84,7 +84,6 @@ const SignUpPage = ({setEmailVerified}) => {
         email: registrationData.email,
         password: registrationData.password,
         re_password: registrationData.rePassword,
-        phone_number: registrationData.phoneNumber.replace(/\D/g, ''),
         major_id: parseInt(registrationData.majorId),
         description: registrationData.description,
       };
@@ -115,23 +114,6 @@ const SignUpPage = ({setEmailVerified}) => {
           required
           className="w-full px-5 py-2 rounded-full border border-green-700 outline-none text-base placeholder-green-700 focus:ring-2 focus:ring-green-500"
         />
-      </div>
-      <div className="relative w-72 mb-4">
-        <InputMask
-          mask="(99) 99999-9999"
-          value={registrationData.phoneNumber}
-          onChange={(e) => handleInputChange({ target: { name: 'phoneNumber', value: e.target.value } })}
-          placeholder="Telefone"
-          required
-        >
-          {(inputProps) => (
-            <input
-              {...inputProps}
-              type="tel"
-              className="w-full px-5 py-2 rounded-full border border-green-700 outline-none text-base placeholder-green-700 focus:ring-2 focus:ring-green-500"
-            />
-          )}
-        </InputMask>
       </div>
       <div className="relative w-72 mb-4">
         <select

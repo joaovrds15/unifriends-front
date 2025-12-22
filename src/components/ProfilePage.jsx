@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Footer from './Footer';
 import { useUser } from '../context/UserContext';
 import { getUserProfile, getMyOwnProfile } from '../services/userService';
-import libraryBackground from '../temp/Image.png';
+import libraryBackground from '../assets/library_background.png';
 
 const ProfilePage = () => {
     const [profile, setProfile] = useState(null);

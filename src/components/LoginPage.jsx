@@ -52,57 +52,80 @@ const LoginPage = () => {
     };
 
     return (
-    <div className="flex flex-col items-center justify-center h-screen bg-white font-sans">
-        <img src={logoImage} alt="Logo" className="w-24 mb-5" />
-        <h2 className="text-2xl font-bold text-gray-800 mb-8">Unifriends</h2>
-        <form onSubmit={handleLoginClick} className="w-full max-w-xs mx-auto flex flex-col gap-4">
+    <div
+      className="relative flex size-full min-h-screen flex-col bg-white justify-between group/design-root overflow-x-hidden"
+      style={{ fontFamily: '"Plus Jakarta Sans", "Noto Sans", sans-serif' }}
+    >
+      <img src={logoImage} alt="Logo" className="w-24 mb-5" />
+      <div>
+        <div className="flex flex-col gap-2 bg-white p-4 pb-2">
+          <p className="text-[#111318] tracking-light text-[28px] font-bold leading-tight">Entrar no Unifriends</p>
+        </div>
+        <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+          <label className="flex flex-col min-w-40 flex-1">
+            <input
+              placeholder="Email"
+              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111318] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f4] focus:border-none h-14 placeholder:text-[#616f89] p-4 text-base font-normal leading-normal"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              type="email"
+              autoComplete="email"
+            />
+          </label>
+        </div>
+        <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+          <label className="flex flex-col min-w-40 flex-1">
             <div className="relative">
-                <input 
-                    type="email" 
-                    placeholder="E-mail" 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                />
+              <input
+                placeholder="Password"
+                className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111318] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f4] focus:border-none h-14 placeholder:text-[#616f89] p-4 text-base font-normal leading-normal pr-12"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                type={passwordVisible ? "text" : "password"}
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                className="absolute top-1/2 right-4 transform -translate-y-1/2"
+                onClick={togglePasswordVisibility}
+                tabIndex={-1}
+              >
+                <img src={passwordVisible ? hideIcon : showIcon} alt={passwordVisible ? "Hide password" : "Show password"} className="w-5 h-5" />
+              </button>
             </div>
-            <div className="relative">
-                <input 
-                    type={passwordVisible ? "text" : "password"}
-                    placeholder="Senha" 
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                />
-                <button 
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500"
-                    type="button" 
-                    onClick={togglePasswordVisibility}
-                >
-                    <img 
-                        src={passwordVisible ? hideIcon : showIcon} 
-                        alt={passwordVisible ? 'Hide' : 'Show'} 
-                        className="w-6 h-6"
-                    />
-                </button>
-            </div>
-            {error && <p className="text-red-500 text-sm mb-0 text-center">Usuário ou Senha Incorreta</p>}
-            <button 
-                type="submit" 
-                className="w-full py-2 bg-green-600 text-white rounded-full hover:bg-green-800 active:bg-green-900 transition focus:outline-none focus:ring-2 focus:ring-green-500"
-            >
-                Entrar
-            </button>
-        </form>
-        <p className="text-sm text-green-600 mt-4">
-            <button 
-                onClick={handleSignUpClick} 
-                className="underline hover:no-underline"
-            >
-                Cadastre-se, é grátis
-            </button>
+          </label>
+        </div>
+        {error && (
+          <p className="text-red-500 text-sm font-normal leading-normal pb-3 pt-1 px-4 text-center">{error}</p>
+        )}
+        <p className="text-[#616f89] text-sm font-normal leading-normal pb-3 pt-1 px-4 text-center underline" style={{ cursor: "pointer" }}>
+          Esqueceu a senha?
         </p>
+        <div className="flex px-4 py-3">
+          <button
+            className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 flex-1 bg-[#135bec] text-white text-sm font-bold leading-normal tracking-[0.015em]"
+            onClick={handleLoginClick}
+            type="button"
+          >
+            <span className="truncate">Entrar</span>
+          </button>
+        </div>
+      </div>
+      <div>
+        <p className="text-[#616f89] text-sm font-normal leading-normal pb-3 pt-1 px-4 text-center">
+          Ao continuar, você concorda com nossos Termos de Serviço e Política de Privacidade
+        </p>
+        <div className="flex px-4 py-3">
+          <button
+            className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 flex-1 bg-transparent text-[#111318] text-sm font-bold leading-normal tracking-[0.015em]"
+            onClick={handleSignUpClick}
+            type="button"
+          >
+            <span className="truncate">Não tem uma conta? Registrar</span>
+          </button>
+        </div>
+        <div className="h-5 bg-white"></div>
+      </div>
     </div>
 );
 };

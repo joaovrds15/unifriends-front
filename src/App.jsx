@@ -2,13 +2,14 @@ import React from "react";
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./components/LoginPage";
-import SignUpPage from "./components/SignUpPage";
+import SignUpPage from "./components/SignUpPageV2";
 import ProfilePage from "./components/ProfilePage";
 import AffinityScreen from "./components/AffinityScreen";
 import EmailPage from "./components/EmailPage";
 import MessageScreen from "./components/MessageScreen";
 import Chat from "./components/Chat";
 import AffinityQuiz from "./components/AffinityQuiz";
+import WelcomeScreen from "./components/WelcomeScreen";
 import VerificationCodePage from "./components/VerificationCodePage";
 import UploadImagesPage from "./components/UploadImagesPage";
 import ConnectionRequests from "./components/ConnectionRequests";
@@ -20,10 +21,12 @@ function App() {
 
   return (
     <UserProvider>
+      <div className="h-screen max-w-md mx-auto bg-white">
       <Router>
         <Routes>
           {/* Public routes */}
-          <Route path="/" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<WelcomeScreen />} />
           <Route path="/signup/email" element={<EmailPage />} />
           <Route
             path="/signup/verification"
@@ -100,6 +103,7 @@ function App() {
           />
         </Routes>
       </Router>
+      </div>
     </UserProvider>
   );
 }
